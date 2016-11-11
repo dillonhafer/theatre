@@ -1,6 +1,16 @@
+const createMovies = (movies) => {
+  let tmp = ""
+  movies.forEach((movie, index) => {
+    tmp += `<lockup index="${index}" xdescription="${movie.description}" xtitle="${movie.title}" videoURL="http://theatre.dillonhafer.com/${movie.video}">
+              <img src="http://theatre.dillonhafer.com/images/${movie.img}" width="300" height="500" />
+              <title>${movie.title}</title>
+            </lockup>`;
+  });
+  return tmp;
+}
+
 const CatalogTemplate = () => {
-  return (
-    `<?xml version="1.0" encoding="UTF-8" ?>
+  let template = `<?xml version="1.0" encoding="UTF-8" ?>
     <document>
       <catalogTemplate>
         <banner>
@@ -9,17 +19,12 @@ const CatalogTemplate = () => {
         <list>
           <section>
             <listItemLockup>
-              <title>Adventure Time Videos</title>
-              <decorationLabel>2</decorationLabel>
+              <title>Movies</title>
+              <decorationLabel>${movies.length}</decorationLabel>
               <relatedContent>
                 <grid>
                   <section>
-                    <lockup videoURL="http://theatre.dillonhafer.com/lemon.mp4">
-                      <img src="http://theatre.dillonhafer.com/images/marceline.png" width="500" height="308" />
-                    </lockup>
-                    <lockup videoURL="http://theatre.dillonhafer.com/movies/Big%20Hero%206/BIG_HERO_6.m4v">
-                      <img src="http://theatre.dillonhafer.com/images/deal-with-it.png" width="500" height="308" />
-                    </lockup>
+                    ${createMovies(movies)}
                   </section>
                 </grid>
               </relatedContent>
@@ -27,6 +32,7 @@ const CatalogTemplate = () => {
           </section>
         </list>
       </catalogTemplate>
-    </document>`
-  )
+    </document>`;
+
+  return template;
 }
