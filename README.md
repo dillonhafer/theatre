@@ -4,6 +4,8 @@ You should be able to get the Xcode tvOS TVML template to run
 out-of-the-box by simply serving this folder after setup. Nginx
 is a good canidate for serving this folder.
 
+This is great for serving videos from a RaspberryPi.
+
 ## Basic Setup/Usage
 
 Create a `js/movies.js` file:
