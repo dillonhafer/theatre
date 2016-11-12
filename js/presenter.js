@@ -141,7 +141,7 @@ const Presenter = {
     const movie = movies.find((m) => { return m.title === event.target.textContent; });
 
     if (movie.video !== undefined) {
-      const videoUrl   = `${BASEURL}${movie.video}`;
+      const videoUrl   = movie.customUrl ? movie.video : `${BASEURL}${movie.video}`;
       const artworkUrl = `${BASEURL}${movie.img}`;
 
       const player    = new Player();
