@@ -1,4 +1,10 @@
-# HaferTheatre
+# Theatre
+
+You should be able to get the Xcode tvOS TVML template to run
+out-of-the-box by simply serving this folder after setup. Nginx
+is a good canidate for serving this folder.
+
+## Basic Setup/Usage
 
 Create a `js/movies.js` file:
 
@@ -19,5 +25,9 @@ const BaseMovies = [
     contentRatingRanking: 300,
     genres: ['Action', 'Adventure', 'Comedy'],
   },
-].sort(titleSort);
+]
 ```
+
+## Preview
+
+![theatre](https://cloud.githubusercontent.com/assets/1136388/20239549/41caac0c-a8c8-11e6-8957-2f4fd875b17a.png)
