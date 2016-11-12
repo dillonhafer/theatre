@@ -46,11 +46,8 @@ const createAlert = (title, description) => {
   let alertString = `<?xml version="1.0" encoding="UTF-8" ?>
   <document>
     <alertTemplate>
-      <title style='color: rgb(0,136,204);font-size: 84px'>${title}</title>
+      <title>${title}</title>
       <description>${description}</description>
-      <button>
-        <text>Boo yes!</text>
-      </button>
     </alertTemplate>
   </document>`
 
