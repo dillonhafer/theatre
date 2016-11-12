@@ -1,12 +1,37 @@
 const createMovies = (movies) => {
-  let tmp = ""
+  let mvs = []
   movies.forEach((movie, index) => {
-    tmp += `<lockup index="${index}" xdescription="${movie.description}" xtitle="${movie.title}" videoURL="http://theatre.dillonhafer.com/${movie.video}">
-              <img src="http://theatre.dillonhafer.com/images/${movie.img}" width="300" height="500" />
-              <title>${movie.title}</title>
-            </lockup>`;
+    mvs.push(`
+      <lockup>
+        <img src="${BASEURL}${movie.img}" width="300" height="500" />
+        <title>${movie.title}</title>
+      </lockup>
+    `);
   });
-  return tmp;
+  return mvs.join('');
+}
+
+const createSections = (genres, movies) => {
+  let sections = [];
+  genres.forEach((genre) => {
+    const moviesInGenre = movies.filter((movie, index) => { return genre.movies.includes(index); });
+    sections.push(`
+      <section>
+        <listItemLockup>
+          <title>${genre.name}</title>
+          <decorationLabel>${genre.movies.length}</decorationLabel>
+          <relatedContent>
+            <grid>
+              <section style='backgroundColor: rgb(31,38,41)'>
+                ${createMovies(moviesInGenre)}
+              </section>
+            </grid>
+          </relatedContent>
+        </listItemLockup>
+      </section>
+    `)
+  });
+  return sections.join('');
 }
 
 const CatalogTemplate = () => {
@@ -19,7 +44,7 @@ const CatalogTemplate = () => {
         <list>
           <section>
             <listItemLockup>
-              <title>Movies</title>
+              <title>All Movies</title>
               <decorationLabel>${movies.length}</decorationLabel>
               <relatedContent>
                 <grid>
@@ -30,6 +55,7 @@ const CatalogTemplate = () => {
               </relatedContent>
             </listItemLockup>
           </section>
+          ${createSections(genres, movies)}
         </list>
       </catalogTemplate>
     </document>`;

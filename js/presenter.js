@@ -14,7 +14,7 @@ const setPlaybackEventListeners = (currentPlayer) => {
      * @note Only a single requestSeekToTime listener can be active at any time. If multiple eventListeners are added for this event, only the last one will be called.
      */
     currentPlayer.addEventListener("requestSeekToTime", function(event) {
-        console.log("Event: " + event.type + "\ntarget: " + event.target + "\ntimestamp: " + event.timeStamp + "\ncurrent time: " + event.currentTime + "\ntime to seek to: " + event.requestedTime) ;
+        // console.log("Event: " + event.type + "\ntarget: " + event.target + "\ntimestamp: " + event.timeStamp + "\ncurrent time: " + event.currentTime + "\ntime to seek to: " + event.requestedTime) ;
         return true;
     });
 
@@ -35,9 +35,9 @@ const setPlaybackEventListeners = (currentPlayer) => {
      * @note Only a single listener can be active at any time. If multiple eventListeners are added for this event, only the last one will be called.
      */
     currentPlayer.addEventListener("shouldHandleStateChange", function(event) {
-        console.log("Event: " + event.type + "\ntarget: " + event.target + "\ntimestamp: " + event.timeStamp + "\nold state: " + event.oldState + "\nnew state: " + event.state + "\nelapsed time: " + event.elapsedTime + "\nduration: " + event.duration);
-        let movieIndex = movies.findIndex((mv) => { return mv.title == event.target.currentMediaItem.title })
-        movies[movieIndex].resumeTime = event.elapsedTime
+        // console.log("Event: " + event.type + "\ntarget: " + event.target + "\ntimestamp: " + event.timeStamp + "\nold state: " + event.oldState + "\nnew state: " + event.state + "\nelapsed time: " + event.elapsedTime + "\nduration: " + event.duration);
+        // let movieIndex = movies.findIndex((mv) => { return mv.title == event.target.currentMediaItem.title })
+        // movies[movieIndex].resumeTime = event.elapsedTime
         return true;
     });
 
@@ -51,7 +51,7 @@ const setPlaybackEventListeners = (currentPlayer) => {
      * - oldState: this attribute represents the state that the player switched from
      */
     currentPlayer.addEventListener("stateDidChange", function(event) {
-        console.log("Event: " + event.type + "\ntarget: " + event.target + "\ntimestamp: " + event.timeStamp + "\noldState: " + event.oldState + "\nnew state: " + event.state);
+        // console.log("Event: " + event.type + "\ntarget: " + event.target + "\ntimestamp: " + event.timeStamp + "\noldState: " + event.oldState + "\nnew state: " + event.state);
     });
  
     /**
@@ -64,7 +64,7 @@ const setPlaybackEventListeners = (currentPlayer) => {
      * - oldState: this attribute represents the state that the player switched from
      */
     currentPlayer.addEventListener("stateWillChange", function(event) {
-        console.log("Event: " + event.type + "\ntarget: " + event.target + "\ntimestamp: " + event.timeStamp + "\noldState: " + event.oldState + "\nnew state: " + event.state);
+        // console.log("Event: " + event.type + "\ntarget: " + event.target + "\ntimestamp: " + event.timeStamp + "\noldState: " + event.oldState + "\nnew state: " + event.state);
     });
  
     /**
@@ -78,7 +78,7 @@ const setPlaybackEventListeners = (currentPlayer) => {
      * @note This event can fire multiple times for the same time boundary as the user can scrub back and forth through the asset.
      */
     currentPlayer.addEventListener("timeBoundaryDidCross", function(event) {
-        console.log("Event: " + event.type + "\ntarget: " + event.target + "\ntimestamp: " + event.timeStamp + "\nboundary: " + event.boundary);
+        // console.log("Event: " + event.type + "\ntarget: " + event.target + "\ntimestamp: " + event.timeStamp + "\nboundary: " + event.boundary);
     }, [30, 100, 150.5, 180.75]);
  
     /**
@@ -92,9 +92,12 @@ const setPlaybackEventListeners = (currentPlayer) => {
      * @note The interval argument should be an integer value as floating point values will be coerced to integers. If omitted, this value defaults to 1
      */
     currentPlayer.addEventListener("timeDidChange", function(event) {
-        console.log("Event: " + event.type + "\ntarget: " + event.target + "\ntimestamp: " + event.timeStamp + "\ntime: " +  event.time + "\ninterval: " + event.interval);
-    }, { interval: 10 });
- 
+        // console.log("Event: " + event.type + "\ntarget: " + event.target + "\ntimestamp: " + event.timeStamp + "\ntime: " +  event.time + "\ninterval: " + event.interval);
+      let movieIndex = movies.findIndex((mv) => { return mv.title == event.target.currentMediaItem.title })
+      movies[movieIndex].resumeTime = event.time
+      return true;
+    }, { interval: 2 });
+
     /**
      * The mediaItemDidChange event is called after the player switches media items.
      * The listener is passed an event object with the following attributes:
@@ -104,7 +107,7 @@ const setPlaybackEventListeners = (currentPlayer) => {
      * - reason: this attribute represents the reason for the change; possible values are: 0 (Unknown), 1 (Played to end), 2 (Forwarded to end), 3 (Errored), 4 (Playlist changed), 5 (User initiated)
      */
     currentPlayer.addEventListener("mediaItemDidChange", function(event) {
-        console.log("Event: " + event.type + "\ntarget: " + event.target + "\ntimestamp: " + event.timeStamp + "\nreason: " + event.reason);
+        // console.log("Event: " + event.type + "\ntarget: " + event.target + "\ntimestamp: " + event.timeStamp + "\nreason: " + event.reason);
     });
  
    /**
@@ -116,7 +119,7 @@ const setPlaybackEventListeners = (currentPlayer) => {
      * - reason: this attribute represents the reason for the change; possible values are: 0 (Unknown), 1 (Played to end), 2 (Forwarded to end), 3 (Errored), 4 (Playlist changed), 5 (User initiated)
      */
     currentPlayer.addEventListener("mediaItemWillChange", function(event) {
-        console.log("Event: " + event.type + "\ntarget: " + event.target + "\ntimestamp: " + event.timeStamp + "\nreason: " + event.reason);
+        // console.log("Event: " + event.type + "\ntarget: " + event.target + "\ntimestamp: " + event.timeStamp + "\nreason: " + event.reason);
     });
 }
 
@@ -135,19 +138,22 @@ const Presenter = {
     navigationDocument.pushDocument(xml);
   },
   load(event) {
-    const baseVideoUrl = 'http://theatre.dillonhafer.com/'
-    const metadata = event.target;
-    const index = parseInt(metadata.getAttribute("index"));
-    const meta = movies[index];
-    console.log('meta:', meta);
+    const movie = movies.find((m) => { return m.title === event.target.textContent; });
 
-    if (meta.video) {
+    if (movie.video !== undefined) {
+      const videoUrl   = `${BASEURL}${movie.video}`;
+      const artworkUrl = `${BASEURL}${movie.img}`;
+
       const player    = new Player();
       const playlist  = new Playlist();
-      const video     = new MediaItem("video", baseVideoUrl+meta.video);
+      const video     = new MediaItem("video", videoUrl);
 
-      video.title = meta.title;
-      video.resumeTime = meta.resumeTime;
+      video.title = movie.title;
+      video.description = movie.description;
+      video.artworkImageURL = artworkUrl;
+      video.resumeTime = movie.resumeTime;
+      video.contentRatingDomain = movie.contentRatingDomain;
+      video.contentRatingRanking = movie.contentRatingRanking;
 
       setPlaybackEventListeners(player);
       player.playlist = playlist;
