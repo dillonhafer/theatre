@@ -1,3 +1,22 @@
+const setRecentlyPlayed = (movie) => {
+  let ud = userDefaults.getData(recentKey);
+
+  if (ud === null) {
+    ud = JSON.stringify([movie]);
+  } else {
+    ud = JSON.parse(ud);
+    let movieIndex = ud.findIndex((mv) => { return mv.title == movie.title });
+    if (movieIndex === -1) {
+      ud.unshift(movie);
+    } else {
+      ud.unshift(ud.pop(movieIndex));
+    }
+    ud = JSON.stringify(ud);
+  }
+
+  userDefaults.setData(recentKey, ud);
+}
+
 const setPlaybackEventListeners = (currentPlayer) => {
     /**
      * The requestSeekToTime event is called when the user attempts to seek to a specific point in the asset.
@@ -137,6 +156,30 @@ const Presenter = {
   pushDocument(xml) {
     navigationDocument.pushDocument(xml);
   },
+  loadMenuItem(event) {
+    const menuItemId = event.target.getAttribute('id');
+    let doc;
+
+    switch (menuItemId) {
+      case 'navigation_recent':
+        doc = Presenter.makeDocument(RecentTemplate());
+        doc.addEventListener("select", Presenter.load.bind(Presenter));
+        break;
+      case 'navigation_genres':
+        doc = Presenter.makeDocument(CatalogTemplate());
+        doc.addEventListener("select", Presenter.load.bind(Presenter));
+        break;
+      case 'navigation_search':
+        doc = Presenter.makeDocument(SearchTemplate());
+        const searchFieldElem = doc.getElementsByTagName('searchField').item(0);
+        const searchKeyboard = searchFieldElem.getFeature("Keyboard");
+        searchKeyboard.onTextChange = PerformSearchRequest.bind(this, doc, searchKeyboard);
+        break;
+    }
+
+    let menuItemDocument = event.target.parentNode.getFeature("MenuBarDocument");
+    menuItemDocument.setDocument(doc, event.target);
+  },
   load(event) {
     const movie = movies.find((m) => { return m.title === event.target.textContent; });
 
@@ -156,6 +199,7 @@ const Presenter = {
       video.contentRatingRanking = movie.contentRatingRanking;
 
       setPlaybackEventListeners(player);
+      setRecentlyPlayed(movie);
       player.playlist = playlist;
       player.playlist.push(video);
       player.present();

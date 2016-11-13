@@ -1,30 +1,31 @@
 let movies = [];
 let genres = [];
 let resourceLoader;
+const recentKey = "recently_played";
 let BASEURL;
 
 App.onLaunch = function(options) {
   BASEURL = options.BASEURL;
-  evaluateScripts([`${BASEURL}/js/movies.js`], (didLoad) => {
+
+  const javascriptFiles = [
+    `${BASEURL}/js/movies.js`,
+    `${BASEURL}/js/resource_loader.js`,
+    `${BASEURL}/js/presenter.js`,
+    `${BASEURL}/templates/menubar.js`,
+    `${BASEURL}/templates/recent.js`,
+    `${BASEURL}/templates/catalog.js`,
+    `${BASEURL}/templates/search.js`,
+  ];
+
+  evaluateScripts(javascriptFiles, (didLoad) => {
     if (didLoad) {
       movies = BaseMovies;
       genres = Genres;
-    }
-  });
-
-  const javascriptFiles = [
-    `${BASEURL}/js/resource_loader.js`,
-    `${BASEURL}/js/presenter.js`
-  ];
-
-  evaluateScripts(javascriptFiles, (success) => {
-    if (success) {
       resourceLoader = new ResourceLoader(options.BASEURL);
-      resourceLoader.loadResource(`${BASEURL}/templates/catalog.js`, function(resource) {
-        let doc = Presenter.makeDocument(resource);
-        doc.addEventListener("select", Presenter.load.bind(Presenter));
-        Presenter.pushDocument(doc);
-      });
+
+      let menu = Presenter.makeDocument(MenuBarTemplate());
+      menu.addEventListener("select", Presenter.loadMenuItem.bind(Presenter));
+      Presenter.pushDocument(menu);
     } else {
       loadError();
     }
