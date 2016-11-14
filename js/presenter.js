@@ -180,29 +180,51 @@ const Presenter = {
     let menuItemDocument = event.target.parentNode.getFeature("MenuBarDocument");
     menuItemDocument.setDocument(doc, event.target);
   },
+  loadMovie(movie, event) {
+    const videoType  = event.target.getAttribute('type');
+
+    switch (videoType) {
+      case 'related':
+        Presenter.load(event);
+        break;
+      case 'play':
+      case 'preview':
+        const videoUrl   = movie.customUrl ? movie.video : `${BASEURL}${movie.video}`;
+        const previewUrl = movie.customPreviewUrl ? movie.previewVideo : `${BASEURL}${movie.previewVideo}`;
+        const artworkUrl = `${BASEURL}${movie.img}`;
+
+        const player    = new Player();
+        const playlist  = new Playlist();
+
+        let itemUrl = (videoType === 'play') ? videoUrl : previewUrl;
+        const video = new MediaItem("video", itemUrl);
+
+        video.title = movie.title;
+        video.description = movie.description;
+        video.artworkImageURL = artworkUrl;
+
+        if (videoType === 'play') {
+          video.resumeTime = movie.resumeTime;
+          setPlaybackEventListeners(player);
+          setRecentlyPlayed(movie);
+        }
+
+        video.contentRatingDomain = movie.contentRatingDomain;
+        video.contentRatingRanking = movie.contentRatingRanking;
+
+        player.playlist = playlist;
+        player.playlist.push(video);
+        player.present();
+        break;
+    }
+  },
   load(event) {
     const movie = movies.find((m) => { return m.title === event.target.textContent; });
 
     if (movie.video !== undefined) {
-      const videoUrl   = movie.customUrl ? movie.video : `${BASEURL}${movie.video}`;
-      const artworkUrl = `${BASEURL}${movie.img}`;
-
-      const player    = new Player();
-      const playlist  = new Playlist();
-      const video     = new MediaItem("video", videoUrl);
-
-      video.title = movie.title;
-      video.description = movie.description;
-      video.artworkImageURL = artworkUrl;
-      video.resumeTime = movie.resumeTime;
-      video.contentRatingDomain = movie.contentRatingDomain;
-      video.contentRatingRanking = movie.contentRatingRanking;
-
-      setPlaybackEventListeners(player);
-      setRecentlyPlayed(movie);
-      player.playlist = playlist;
-      player.playlist.push(video);
-      player.present();
+      let doc = Presenter.makeDocument(MovieTemplate(movie));
+      doc.addEventListener("select", Presenter.loadMovie.bind(Presenter, movie));
+      Presenter.pushDocument(doc);
     }
   },
 }

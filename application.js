@@ -15,6 +15,7 @@ App.onLaunch = function(options) {
     `${BASEURL}/templates/recent.js`,
     `${BASEURL}/templates/catalog.js`,
     `${BASEURL}/templates/search.js`,
+    `${BASEURL}/templates/movie.js`,
   ];
 
   evaluateScripts(javascriptFiles, (didLoad) => {
