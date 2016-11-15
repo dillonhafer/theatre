@@ -8,7 +8,8 @@ App.onLaunch = function(options) {
   BASEURL = options.BASEURL;
 
   const javascriptFiles = [
-    `${BASEURL}/js/movies.js`,
+    `${BASEURL}/js/fetch-polyfill.js`,
+    `${BASEURL}/js/load-movies.js`,
     `${BASEURL}/js/resource_loader.js`,
     `${BASEURL}/js/presenter.js`,
     `${BASEURL}/templates/menubar.js`,
@@ -20,10 +21,7 @@ App.onLaunch = function(options) {
 
   evaluateScripts(javascriptFiles, (didLoad) => {
     if (didLoad) {
-      movies = BaseMovies;
-      genres = Genres;
       resourceLoader = new ResourceLoader(options.BASEURL);
-
       let menu = Presenter.makeDocument(MenuBarTemplate());
       menu.addEventListener("select", Presenter.loadMenuItem.bind(Presenter));
       Presenter.pushDocument(menu);
